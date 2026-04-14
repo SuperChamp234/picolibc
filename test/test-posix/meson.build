@@ -37,6 +37,7 @@ tests = [
   'test-fnmatch',
   'test-getdelim',
   'test-grp',
+  'test-dirent',
   'test-pwd',
   'test-rename',
   'test-signal',

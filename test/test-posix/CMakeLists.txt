@@ -37,6 +37,7 @@ set(tests
   test-fnmatch
   test-getdelim
   test-grp
+  test-dirent
   test-pwd
   test-signal
   test-stat

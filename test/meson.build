@@ -383,6 +383,6 @@ subdir('test-stdio')
 subdir('test-stdlib')
 subdir('testsuite')
 
-if has_arm_semihost and oslib_test_variant == 'semihost'
+if (has_arm_semihost or has_semihost) and oslib_test_variant == 'semihost'
   subdir('semihost')
 endif

@@ -36,13 +36,11 @@
 semihost_tests = [
   'semihost-argv',
   'semihost-exit',
-  'semihost-exit-extended',
   'semihost-clock',
   'semihost-close',
   'semihost-errno',
   'semihost-flen',
   'semihost-get-cmdline',
-  'semihost-gettimeofday',
   'semihost-iserror',
   'semihost-istty',
   'semihost-open',
@@ -52,25 +50,42 @@ semihost_tests = [
   'semihost-seek',
   'semihost-system',
   'semihost-time',
-  'semihost-times',
   'semihost-writec',
   'semihost-write0',
 ]
 
+# ARM semihosting-only tests: not present in the Hexagon semihosting spec.
+# gettimeofday is excluded from Hexagon as Qualcomm does not provide support.
+if has_arm_semihost
+  semihost_tests += [
+    'semihost-gettimeofday',
+    'semihost-exit-extended',
+    'semihost-times',
+  ]
+endif
+
 # These tests should pass, but are currently broken under qemu
 semihost_broken = [
-  'semihost-elapsed',
   'semihost-heapinfo',
   'semihost-readc',
-  'semihost-tickfreq',
   'semihost-tmpnam',
   ]
 
+# ARM semihosting-only: SYS_ELAPSED (0x30) and SYS_TICKFREQ (0x31) are
+# reserved/not present in the Hexagon semihosting spec.
+if has_arm_semihost
+  semihost_broken += ['semihost-elapsed', 'semihost-tickfreq']
+endif
+
 semihost_fail_tests = [
   'semihost-exit-failure',
-  'semihost-exit-extended-failure',
   'semihost-system-failure',
 ]
+
+# ARM semihosting-only: SYS_EXIT_EXTENDED not in Hexagon spec.
+if has_arm_semihost
+  semihost_fail_tests += ['semihost-exit-extended-failure']
+endif
 
 semihost_no_args_tests = [
   'semihost-no-argv',

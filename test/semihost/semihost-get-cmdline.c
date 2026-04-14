@@ -49,9 +49,23 @@ main(void)
         printf("get_cmdline failed %d %d\n", ret, sys_semihost_errno());
         exit(1);
     }
+#ifdef __HEXAGON_ARCH__
+    /* On Hexagon, QEMU prepends the binary path before the -append args,
+     * so the cmdline is "<binary-path> hello world" rather than COMMAND_LINE.
+     * Verify the suffix after the first space matches " hello world". */
+    const char *space = strchr(buf, ' ');
+    const char *suffix = space ? space : buf;
+    const char *expected_suffix = strchr(COMMAND_LINE, ' ');
+    expected_suffix = expected_suffix ? expected_suffix : COMMAND_LINE;
+    if (strcmp(suffix, expected_suffix) != 0) {
+        printf("cmdline suffix '%s' (expected '%s')\n", suffix, expected_suffix);
+        exit(2);
+    }
+#else
     if (strcmp(buf, COMMAND_LINE) != 0) {
         printf("cmdline %s (expected %s)\n", buf, COMMAND_LINE);
         exit(2);
     }
+#endif
     exit(0);
 }

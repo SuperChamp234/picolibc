@@ -39,32 +39,47 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdint.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <errno.h>
+#include <stdbool.h>
 
-/* System call codes */
+/* System call codes — single source of truth used for both the enum and
+ * the sys_semihost() validity check. Add new opcodes here only. */
+#define HEXAGON_SYSCALL_CODES(X) \
+    X(SYS_OPEN,        0x01) \
+    X(SYS_CLOSE,       0x02) \
+    X(SYS_WRITEC,      0x03) \
+    X(SYS_WRITE0,      0x04) \
+    X(SYS_WRITE,       0x05) \
+    X(SYS_READ,        0x06) \
+    X(SYS_READC,       0x07) \
+    X(SYS_ISERROR,     0x08) \
+    X(SYS_ISTTY,       0x09) \
+    X(SYS_SEEK,        0x0a) \
+    X(SYS_FLEN,        0x0c) \
+    X(SYS_TMPNAM,      0x0d) \
+    X(SYS_REMOVE,      0x0e) \
+    X(SYS_RENAME,      0x0f) \
+    X(SYS_CLOCK,       0x10) \
+    X(SYS_TIME,        0x11) \
+    X(SYS_SYSTEM,      0x12) \
+    X(SYS_ERRNO,       0x13) \
+    X(SYS_GET_CMDLINE, 0x15) \
+    X(SYS_HEAPINFO,    0x16) \
+    X(SYS_EXIT,        0x18) \
+    X(SYS_FTELL,       0x100) \
+    X(SYS_FSTAT,       0x101) \
+    X(SYS_STAT,        0x103) \
+    X(SYS_GETCWD,      0x104) \
+    X(SYS_ACCESS,      0x105) \
+    X(SYS_OPENDIR,     0x180) \
+    X(SYS_CLOSEDIR,    0x181) \
+    X(SYS_READDIR,     0x182) \
+    X(SYS_EXEC,        0x185) \
+    X(SYS_FTRUNC,      0x186)
+
+#define _HEXAGON_ENUM_ENTRY(name, val) name = val,
 enum hexagon_system_call_code {
-    SYS_OPEN = 1,
-    SYS_CLOSE = 2,
-    SYS_WRITEC = 3,
-    SYS_WRITE0 = 4,
-    SYS_WRITE = 5,
-    SYS_READ = 6,
-    SYS_ISTTY = 9,
-    SYS_SEEK = 0x0a,
-    SYS_FLEN = 12,
-    SYS_REMOVE = 14,
-    SYS_RENAME = 15,
-    SYS_GET_CMDLINE = 21,
-    SYS_EXIT = 24,
-    SYS_FTELL = 0x100,
-    SYS_FSTAT = 0x101,
-    SYS_STAT = 0x103,
-    SYS_GETCWD = 0x104,
-    SYS_ACCESS = 0x105,
-    SYS_OPENDIR = 0x180,
-    SYS_CLOSEDIR = 0x181,
-    SYS_READDIR = 0x182,
-    SYS_EXEC = 0x185,
-    SYS_FTRUNC = 0x186,
+    HEXAGON_SYSCALL_CODES(_HEXAGON_ENUM_ENTRY)
 };
 
 /* Software interrupt */
@@ -140,5 +155,11 @@ struct __SYS_STAT {
         (p)->st_mtime = (uint32_t)(h)->mtime; \
         (p)->st_ctime = (uint32_t)(h)->ctime; \
     } while (0)
+
+/*
+ * sys_semihost() is implemented in hexagon_sys_semihost.c using
+ * HEXAGON_SYSCALL_CODES to validate opcodes before issuing trap0.
+ */
+uintptr_t sys_semihost(uintptr_t op, uintptr_t param);
 
 #endif

@@ -35,6 +35,7 @@
 
 has_arm_semihost = false
 has_semihost_test_flag = false
+has_semihost_args = false
 has_semihost = true
 
 src_semihost = []
@@ -48,6 +49,42 @@ endif
 
 if has_arm_semihost
   subdir('common')
+elif has_semihost
+  # Non-ARM semihosting (e.g. Hexagon): add common/ to the include path so
+  # that <semihost.h> is findable, and compile the sys_semihost_* wrappers
+  # from common/ that are shared across all semihosting architectures.
+  # ARM-only sources (sys_elapsed, sys_exit_extended, sys_feature, sys_tickfreq)
+  # are excluded. common/times.c is included — SYS_ELAPSED (0x30) is handled
+  # in the machine bridge (hexagon_sys_semihost.c) to return ENOSYS safely.
+  inc = [inc, include_directories('common')]
+  inc_args += '-I' + meson.current_source_dir() / 'common'
+  if really_install
+    install_headers('common/semihost.h', install_dir : include_dir)
+  endif
+  src_semihost += files([
+    'common/sys_clock.c',
+    'common/sys_close.c',
+    'common/sys_errno.c',
+    'common/sys_exit.c',
+    'common/sys_flen.c',
+    'common/sys_get_cmdline.c',
+    'common/sys_getc.c',
+    'common/sys_heapinfo.c',
+    'common/sys_iserror.c',
+    'common/sys_istty.c',
+    'common/sys_open.c',
+    'common/sys_putc.c',
+    'common/sys_read.c',
+    'common/sys_remove.c',
+    'common/sys_rename.c',
+    'common/sys_seek.c',
+    'common/sys_system.c',
+    'common/sys_time.c',
+    'common/sys_tmpnam.c',
+    'common/sys_write.c',
+    'common/sys_write0.c',
+    'common/times.c',
+  ])
 endif
 
 foreach params : targets

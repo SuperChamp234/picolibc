@@ -58,6 +58,18 @@ main(int argc, char **argv)
     }
     for (c = 0; (int)c < argc; c++) {
         if (c < EXPECT_NARG) {
+#ifdef __HEXAGON_ARCH__
+            /* On Hexagon, QEMU provides the full binary path as argv[0];
+             * check only the basename rather than the literal "program-name". */
+            if (c == 0) {
+                const char *base = strrchr(argv[0], '/');
+                base = base ? base + 1 : argv[0];
+                if (strcmp(base, "semihost-argv") != 0) {
+                    printf("argv[0] basename is '%s' expect 'semihost-argv'\n", base);
+                    errors = 1;
+                }
+            } else
+#endif
             if (strcmp(argv[c], expect_argv[c]) != 0) {
                 printf("argv[%d] is '%s' expect '%s'\n", c, argv[c], expect_argv[c]);
                 errors = 1;

@@ -46,6 +46,7 @@ src_semihost += files([
                        'hexagon_read.c',
                        'hexagon_rename.c',
                        'hexagon_semihost.c',
+                       'hexagon_sys_semihost.c',
                        'hexagon_stat.c',
                        'hexagon_unlink.c',
                        'hexagon_write.c',
@@ -55,3 +56,5 @@ src_semihost += files([
   src_semihost_fake_gettimeofday,
   src_semihost_fake_kill,
   ]
+
+has_semihost_args = true

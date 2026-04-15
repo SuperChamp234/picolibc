@@ -43,6 +43,7 @@ if cc.get_define('_CALL_ELF') == '1'
                             'powerpc_io.c',
                           ]) + [
     src_semihost_fake_close,
+    src_semihost_fake_closedir,
     src_semihost_fake_fstat,
     src_semihost_fake_getentropy,
     src_semihost_fake_getpid,
@@ -52,7 +53,9 @@ if cc.get_define('_CALL_ELF') == '1'
     src_semihost_fake_rename,
     src_semihost_fake_lseek,
     src_semihost_fake_open,
+    src_semihost_fake_opendir,
     src_semihost_fake_read,
+    src_semihost_fake_readdir,
     src_semihost_fake_unlink,
     src_semihost_fake_write,
   ]

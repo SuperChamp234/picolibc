@@ -44,12 +44,15 @@ src_semihost += files([
                        'lm32_unlink.c',
                        'lm32_write.c',
                      ]) + [
+  src_semihost_fake_closedir,
   src_semihost_fake_fstat,
   src_semihost_fake_getentropy,
   src_semihost_fake_getpid,
   src_semihost_fake_gettimeofday,
   src_semihost_fake_isatty,
   src_semihost_fake_kill,
+  src_semihost_fake_opendir,
+  src_semihost_fake_readdir,
   src_semihost_fake_rename,
   src_semihost_fake_stat,
   ]

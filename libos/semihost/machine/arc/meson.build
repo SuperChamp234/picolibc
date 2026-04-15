@@ -44,10 +44,13 @@ src_semihost += files([
                        'arc_unlink.c',
                        'arc_write.c',
                      ]) + [
+  src_semihost_fake_closedir,
   src_semihost_fake_getentropy,
   src_semihost_fake_getpid,
   src_semihost_fake_gettimeofday,
   src_semihost_fake_isatty,
   src_semihost_fake_kill,
+  src_semihost_fake_opendir,
+  src_semihost_fake_readdir,
   src_semihost_fake_rename,
   ]

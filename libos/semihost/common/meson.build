@@ -76,8 +76,11 @@ src_semihost += files([
                        'sys_write.c',
                        'sys_write0.c',
                      ]) + [
+  src_semihost_fake_closedir,
   src_semihost_fake_getpid,
   src_semihost_fake_kill,
+  src_semihost_fake_opendir,
+  src_semihost_fake_readdir,
   src_semihost_fake_stat,
   ]
 

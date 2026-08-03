@@ -48,6 +48,17 @@ struct on_exit {
     enum pico_onexit_kind kind;
 };
 
+/*
+ * stdio-exit-flush registers one internal atexit handler before main. Keep
+ * that implementation detail from reducing the ISO C guarantee of at least
+ * ATEXIT_MAX registrations available to the application.
+ */
+#ifdef __STDIO_EXIT_FLUSH
+enum { _PICO_ATEXIT_MAX = ATEXIT_MAX + 1 };
+#undef ATEXIT_MAX
+#define ATEXIT_MAX _PICO_ATEXIT_MAX
+#endif
+
 static struct on_exit on_exits[ATEXIT_MAX];
 
 int
